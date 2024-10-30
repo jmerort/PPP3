@@ -33,7 +33,7 @@ int main()
     //instead of adding randomness, I used a long vector with some positions (though it's always the same)
     std::vector <std::string> computer = {"rock", "rock", "paper", "scissors", "paper", "rock", "scissors", "scissors", "rock", "paper", "scissors","rock", "paper","paper"};
 
-    std::cout << "--ROCK, PAPER, SCISSORS BEGINS!--\nFirst of all, tell me your day of birth (or, if you've played before, a random number between 1 and 30)\n";
+    std::cout << "--ROCK, PAPER, SCISSORS BEGINS!--\nFirst of all, tell me your day of birth (or, if you've played before, a random positive number)\n";
     std::cin >> init;
     count = init % computer.size(); //we start at a "random" place in the vector, given that the person inputs "random" numbers
 
