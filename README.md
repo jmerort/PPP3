@@ -3,3 +3,6 @@ As I work my way through Bjarne Stroustrup's Programming Principles and Practice
 
 
 I will try to do most if not all of the excercises, drills and "try this" sections of the book, and I might upload here some notes and definitions, if I happen to write them. How far I go into the book, time will tell.
+
+
+I'm not a professional programmer, and my education is as an electronic engineer, so these are not expert solutions or anything of the sort, though I hope they will get better as I continue to write.
