@@ -1,0 +1,17 @@
+E3.10
+[10] Try to calculate the number of rice grains that the inventor asked for in
+exercise 9 above. You’ll find that the number is so large that it won’t fit
+in an int or a double. Observe what happens when the number gets too
+large to represent exactly as an int and as a double. What is the largest
+number of squares for which you can calculate the exact number of
+grains (using an int)? What is the largest number of squares for which
+you can calculate the approximate number of grains (using a double)?
+
+
+Using the program from E3.9, when the number of grains gets too big for an int, it becomes
+zero and then the loop can't ever end. Using double instead, the number of grains doesn't seem 
+to be too large for a double, being 9.22337e+18 for 64 squares. This may be a technical issue
+I still don't understand.
+
+29 Oct 2024
+@jmerort
