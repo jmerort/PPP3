@@ -6,3 +6,7 @@ I will try to do most if not all of the excercises, drills and "try this" sectio
 
 
 I'm not a professional programmer, and my education is as an electronic engineer, so these are not expert solutions or anything of the sort, though I hope they will get better as I continue to write.
+
+## About my programs
+
+I prefer not to use the PPP3.h file or any other files made for such editions, so I import the necessary libraries. I also do not use namespace std, as I always read people warning against it. 
