@@ -1,5 +1,4 @@
 Here are my definitions of some important C++ terms.   
-
 # //
 Indicates a comment from the sign to the end of the line.
 
@@ -10,7 +9,7 @@ Output operator. It is used with output streams to print data on screen or store
 The act of leaving out of a model (mathematical, physical, mental etc.) the elements deemed unnecessary for a particular goal, leaving only the essentials. In programming, it involves hiding the implementation details of a particular application, giving the user instead a simple interface through which they can use it.
 
 # Asesrtion
-Statement that affirms an [Invariant](Glossary.md#Invariant).
+Statement that affirms an [Invariant](glossary.md#Invariante).
 
 # Assignment
 Giving a value to an already created variable, removing the previous one.
@@ -63,16 +62,16 @@ Putting one value immediately after another to create a new one. Can be done wit
 ```
 
 # Container
-Structure that can hold many objects. In C++ the most popular container is [vector](Glossary.md#vector).
+Structure that can hold many objects. In C++ the most popular container is [vector](glossary.md#vector).
 
 # Conversion
-Change of an object's type. There are safe conversion (those whose final type can contain all the information of the original type) and unsafe ones (those where some information is lost.) See [narrowing](Glossary.md#Narrowing).
+Change of an object's type. There are safe conversion (those whose final type can contain all the information of the original type) and unsafe ones (those where some information is lost.) See [narrowing](glossary.md#Narrowing).
 ```
 int a = 2.5 / 1 //conversion of double 1.25 to int 1
 ``` 
 
 # cout
-Character output stream. Used in conjunction with [<<](Glossary.md#<<)
+Character output stream. Used in conjunction with [<<](glossary.md#<<)
 
 # Debugging
 Process of finding and fixing software errors (or bugs) in a program. It is rather tedious, so our code should be structured in such a way as to minimize the time spent on it.
@@ -109,7 +108,7 @@ Program tasked with linking a program in object code with the libraries whose ob
 ![[Pasted image 20241017092308.png]]
 
 # Input
-Information that a program uses to produce its output [output](Glossary.md#Output). It can come from external sources (e.g.: keyboard, files, other programs etc.) or from other parts of the program.
+Information that a program uses to produce its output [output](glossary.md#Output). It can come from external sources (e.g.: keyboard, files, other programs etc.) or from other parts of the program.
 
 # Statement
 Expression ended by a semicolon. It is the building block of programs.
@@ -205,7 +204,7 @@ v1.push_back(val);
 Integrated development environment. Program which gives you tools to write, compile, link and execute programs easier than on the command line. Some examples are CodeBlocks and VSCode.
 
 # if
-Conditional statement whose body (the statement after it, which can be many statements enclosed in brackets) is executed if the condition is logically true. See [else](Glossary.md#else).
+Conditional statement whose body (the statement after it, which can be many statements enclosed in brackets) is executed if the condition is logically true. See [else](glossary.md#else).
 ```
 if(cond){...}
 ```
@@ -305,10 +304,10 @@ v1.push_back(3); //v1 is now {1, 2, 3}
 ```
 
 # Repetition
-Running a section of code many times. Similar to [iteración](Glossary.md#Iteración).
+Running a section of code many times. Similar to [iteración](glossary.md#Iteración).
 
 # Requisite
-Condition. See [pre-condition](Glossary.md#Pre-condition) and [post-condition](Glossary.md#Post-condition).
+Condition. See [pre-condition](glossary.md#Pre-condition) and [post-condition](glossary.md#Post-condition).
 
 # R-value 
 Value that a variable takes when it is on the right side of an assignement. It refers to the value of the variable.
@@ -323,7 +322,7 @@ Data that a program or part of it sends (to another program, to a screen, a file
 Way of programming where each variable is handeled according to its type, so as to avoid narrowing.
 
 # Selection
-Decision structure where one of a number of sections of code can be executed according to the value of a given variable. Similar to if. In C++ it is implemented using [switch](Glossary.md#switch) structures.
+Decision structure where one of a number of sections of code can be executed according to the value of a given variable. Similar to if. In C++ it is implemented using [switch](glossary.md#switch) structures.
 
 # size()
 Member function of std::vector which returns its size, or number of elements.
@@ -353,10 +352,10 @@ switch(var)
 ```
 
 # Testing
-Entering inputs into a program to check if it works how it should. For professional software, this should be done systematically and with a large amount of inputs, for which testing programs are used. Testing and debugging [debugging](Glossary.md#Debugging) are the two techniques used to solve programming errors. 
+Entering inputs into a program to check if it works how it should. For professional software, this should be done systematically and with a large amount of inputs, for which testing programs are used. Testing and debugging [debugging](glossary.md#Debugging) are the two techniques used to solve programming errors. 
 
 # Throw 
-Function that can throw errors when called inside the body of a [try()](Glossary.md#Excepción).
+Function that can throw errors when called inside the body of a [try()](glossary.md#Excepción).
 
 # Tipo
 Data type of a given object. It determines how the information it contains is interpreted by the computer, as well as the operations that you can do to it. 
