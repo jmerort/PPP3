@@ -354,7 +354,7 @@ int a = 10
 Entering inputs into a program to check if it works how it should. For professional software, this should be done systematically and with a large amount of inputs, for which testing programs are used. Testing and debugging [debugging](glossary.md#Debugging) are the two techniques used to solve programming errors. 
 
 # Throw 
-Function that can throw errors when called inside the body of a [try()](glossary.md#Exceptiin).
+Function that can throw errors when called inside the body of a [try()](glossary.md#Exception).
 
 # Type
 Data type of a given object. It determines how the information it contains is interpreted by the computer, as well as the operations that you can do to it. 
