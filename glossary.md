@@ -9,7 +9,7 @@ Output operator. It is used with output streams to print data on screen or store
 The act of leaving out of a model (mathematical, physical, mental etc.) the elements deemed unnecessary for a particular goal, leaving only the essentials. In programming, it involves hiding the implementation details of a particular application, giving the user instead a simple interface through which they can use it.
 
 # Asesrtion
-Statement that affirms an [Invariant](glossary.md#Invariante).
+Statement that affirms an [Invariant](glossary.md#Invariant).
 
 # Assignment
 Giving a value to an already created variable, removing the previous one.
@@ -355,7 +355,7 @@ switch(var)
 Entering inputs into a program to check if it works how it should. For professional software, this should be done systematically and with a large amount of inputs, for which testing programs are used. Testing and debugging [debugging](glossary.md#Debugging) are the two techniques used to solve programming errors. 
 
 # Throw 
-Function that can throw errors when called inside the body of a [try()](glossary.md#Excepción).
+Function that can throw errors when called inside the body of a [try()](glossary.md#Exceptiin).
 
 # Tipo
 Data type of a given object. It determines how the information it contains is interpreted by the computer, as well as the operations that you can do to it. 
