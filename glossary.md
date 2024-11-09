@@ -1,4 +1,5 @@
 Here are my definitions of some important C++ terms.   
+
 # //
 Indicates a comment from the sign to the end of the line.
 
@@ -9,7 +10,7 @@ Output operator. It is used with output streams to print data on screen or store
 The act of leaving out of a model (mathematical, physical, mental etc.) the elements deemed unnecessary for a particular goal, leaving only the essentials. In programming, it involves hiding the implementation details of a particular application, giving the user instead a simple interface through which they can use it.
 
 # Asesrtion
-Statement that affirms an [Invariant](Glossary.md#Invariante).
+Statement that affirms an [Invariant](Glossary.md#Invariant).
 
 # Assignment
 Giving a value to an already created variable, removing the previous one.
