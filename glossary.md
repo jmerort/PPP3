@@ -107,14 +107,7 @@ To reduce the amount of errors on our programs, we can follow these steps:
 2) Fix the errors that have occurred through debugging and testing.
 3) Make sure the remaining errors are not significant.
 
-
-
-
-
-
-
-
-# Excepction
+# Exception
 C++ mechanism of dealing with errors that separates error detection (to be done in the called function) from error handling (to be done in the called function). It consists of a structure with the functions try(), throw() and catch().
 ```
 try {
