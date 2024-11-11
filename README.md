@@ -9,4 +9,4 @@ I'm not a professional programmer, and my education is as an electronic engineer
 
 ## About my programs
 
-I prefer not to use the PPP3.h file or any other files made for such editions, so I import the necessary libraries. I also do not use namespace std, as I always read people warning against it. 
+I prefer not to use the PPP3.h file or any other specific files, so I import the necessary libraries. I also do not use namespace std, as I always read people warning against it. This also means i don't use the error() function, throwing instead std::runtime_error and catching it accordingly.
