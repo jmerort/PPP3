@@ -1,0 +1,65 @@
+# UNIT 6 REVIEW
+
+**[1] What is the purpose of working on the program after the first version
+works? Give a list of reasons.**
+The first version of almost any program is probably not in a good enough state to be used by users or other developers. We must fix what doesn't work, improve what can reasonably be improved and add whichever new functionalities are needed.
+
+**[2] Why does 1+2; q typed into the calculator not quit after it receives an
+error?**
+Because of the way we have decided to clean up errors. 
+
+**[3] Why did we choose to make a constant character called number?**
+To represent the type of numeric tokens.
+
+**[4] We split main() into two separate functions. What does the new function
+do and why did we split main()?**
+The new function computes the calculation loop. We did this because we noticed that two logically separate actions were being performed in the main() function, namely computing the calculation loop and checking for errors.
+
+**[5] Why do we split code into multiple functions? State principles.**
+To make our code easier to read (by separating logically separate actions), faster to write (by not having to copy and paste the same lines of code over and over), easier to fix and less prone to error.
+
+**[6] What is the purpose of commenting?**
+Helping future readers (be it ourselves or other developers) understand what the code is supposed to do and to clarify parts of it that may be hard to understand. Comments are also used to provide technical information about when the program was written and updated and by whom.
+
+**[7] What is the use of symbolic constants?**
+Symbolic constants (names that represent constants in the code) are used to make the code more readable and avoid magic constants.
+For example, the equation  m*g is more readable than m*9.81.
+
+**[8] Why do we care about code layout?**
+Because errors that can be easily seen are more easily fixed, thus a program with a readable structure is less prone to errors.
+
+**[9] How do we handle % (remainder) of floating-point numbers?**
+We can compute the floating-point modulo or give an error message if the user tries to compute the modulo of something that is not an integer.
+
+**[10] What does is_declared() do and how does it work?**
+It's a boolean function that takes a variable name and returns 1 if a variable of that name is on our variable list and 0 if not.
+
+**[11] The input representation for let is more than one character. How is it
+accepted as a single token in the modified code?**
+The entire word is read into a string and a token of type "let" is returned if the word "let" is read.
+
+**[12] What are the rules for what names can and cannot be in a calculator
+program?**
+An acceptable name is a sequence of letters (upper or lower case) or digits that begins with a letter.
+
+**[13] Why is it a good idea to build a program incrementally?**
+Because errors grow non linearly with program length, thus making sure that a small version of our program works and adding to it can save us a lot of debugging time.
+
+**[14] When do you start to test?**
+As soon as you can.
+
+**[15] When do you retest?**
+Ideally after every change made to the program.
+
+**[16] How do you decide what should be a separate function?**
+You check if a given operation constitutes a logically separate action and, if so, you make it a function.
+
+**[17] How do you choose names for variables and functions? List possible
+reasons.**
+The names of variables and functions should be as meaningful as possible without being too long.
+
+**[18] What should be in comments and what should not?**
+What is better expressed in code should not be in a comment. 
+
+**[19] When do we consider a program finished?**
+It depends on the use that our program is to have. For instance, a safety critical program will need very rigorous testing and error checking done before it can ever be implemented in the real world. In general, a program should do what we want it to do, have useful comments and good error checking before we can call it finished.
