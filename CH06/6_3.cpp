@@ -1,32 +1,9 @@
 /*
 ---
-UNIT 6 DRILL
-[1] Starting from the file calculator08buggy.cpp, get the calculator to compile.
-[2] Go through the entire program and add appropriate comments.
-[3] As you commented, you found errors (deviously inserted especially for
-you to find). Fix them; they are not in the text of the book.
-[4] Testing: prepare a set of inputs and use them to test the calculator. Is
-your list pretty complete? What should you look for? Include negative values, 0, very small, very large, and silly inputs.
-[5] Do the testing and fix any bugs that you missed when you commented.
-[6] Add a predefined name k meaning 1000.
-[7] Give the user a square root function sqrt(), for example, sqrt(2+6.7).
-Naturally, the value of sqrt(x) is the square root of x; for example, sqrt(9)
-is 3. Use the standard-library sqrt() function to implement that calculator
-sqrt(). Remember to update the comments, including the grammar.
-[8] Catch attempts to take the square root of a negative number and print an
-appropriate error message.
-[9] Allow the user to use pow(x,i) to mean Multiply x with itself i times; for
-example, pow(2.5,3) is 2.5*2.5*2.5. Require i to be an integer using the
-technique we used for % (§6.5).
-[10] Change the declaration keyword from let to #.
-[11] Change the quit keyword from quit to exit. That will involve defining a
-string for quit just as we did for let in §6.8.2.
+E6.3
+[3]Provide named constants...
+
 ---
-
-
-calculator08buggy.cpp
-Helpful comments removed.
-We have inserted 3 bugs that the compiler will catch and 3 that it won't.
 
 
 -GRAMMAR-
@@ -40,9 +17,13 @@ Print:
 Quit:
 	"q"
 Statement:
+	Assignment
 	Declaration
 	Expression
+Assignment:
+	Name "=" Expression
 Declaration:
+	"const" Name "=" Expression
 	"let" Name "=" Expression
 Expression:
 	Term
@@ -52,7 +33,6 @@ Term:
 	Primary
 	Term "*" Primary
 	Term "/" Primary
-	Term "%" Primary
 Primary:
 	Number
 	"sqrt(" Expression ")"
@@ -64,7 +44,7 @@ Number:
 	floating-point-literal
 
 
-15 Nov 2024
+25 Nov 2024
 @jmerort
 */
 
@@ -84,32 +64,34 @@ public:
 	Token(char ch, std::string n) :kind{ch}, name{n} {} //variable constructor
 };
 
-class Token_stream { //to hold the last read token
+class Token_stream { //to hold the last read tokens
 	bool full;
-	Token buffer;
+	std::vector <Token> buffer; //vector that cand hold many tokens
 public:
 	Token_stream() :full(0), buffer(0) { }
 
 	Token get();
-	void unget(Token t) { buffer = t; full = true; }
-
+	void unget(Token t) { buffer.push_back(t); full = true; } // put the last read token back in the buffer
 	void ignore(char);
 };
 
 const char let = 'L', //keywords for different actions
-           quit = 'Q',
+	   quit = 'Q',
            print = ';',
            number = '8',
            name = 'a',
 	   square_root = 'S',
-	   power = 'P';
+	   power = 'P',
+	   ct = 'C';
 
 Token Token_stream::get()
 {
 	if (full) //if there already is a token in the buffer, return it
 	{
-        	full = false;
-        	return buffer; 
+		Token last = buffer[buffer.size()-1];
+		buffer.pop_back();
+        	if (buffer.size() == 0) full = false; //if the buffer has been emptied, the get() method will now read more characters from input stream
+        	return last;
 	}
 	char ch;
 	std::cin >> ch;
@@ -147,11 +129,11 @@ Token Token_stream::get()
             	if (ch == '#') //new declaration keyword
 			return Token(let);
 
-		if (isalpha(ch)) //is ch a letter?
+		if (isalpha(ch)) //is ch a letter
             	{
 			std::string s;
                 	s = ch;
-                	while (std::cin.get(ch) && (isalpha(ch) || isdigit(ch))) s += ch;
+                	while (std::cin.get(ch) && ((isalpha(ch) || isdigit(ch) || ch == '_'))) s += ch;
 			std::cin.putback(ch);
                 	if (s == "exit")
                     		return Token(quit);
@@ -159,7 +141,9 @@ Token Token_stream::get()
 				return (Token(square_root));
 			if (s == "pow")
 				return (Token(power));
-                	return Token(name, s);
+			if (s == "const")
+				return (Token(ct)); //constant variable type
+                	return Token(name, s); //if none of these, it's a variable
             	}
             throw(std::runtime_error("Bad token"));
 	}
@@ -167,10 +151,12 @@ Token Token_stream::get()
 
 void Token_stream::ignore(char c)
 {
-	if (full && c == buffer.kind) {
+	if (full && c == buffer[buffer.size()-1].kind) {
 		full = false;
+		buffer.clear();
 		return;
 	}
+	buffer.clear();
 	full = false;
 
 	char ch;
@@ -182,7 +168,8 @@ struct Variable {
 	//class for named variables
 	std::string name;
 	double value;
-	Variable(std::string n, double v) :name(n), value(v) { }
+	bool ct;
+	Variable(std::string n, double v, bool c) :name(n), value(v), ct(c) { }
 };
 
 std::vector<Variable> names;
@@ -197,10 +184,13 @@ double get_value(std::string s)
 void set_value(std::string s, double d)
 {
 	for (int i = 0; i <= names.size(); ++i)
+	{
 		if (names[i].name == s) {
+			if(names[i].ct) throw(std::runtime_error("can't change value of a constant."));
 			names[i].value = d;
 			return;
 		}
+	}
 	throw(std::runtime_error("set: undefined name "));
 }
 
@@ -310,7 +300,17 @@ double expression()
 	}
 }
 
-double declaration()
+double assignment(std::string name)
+{
+	if(!is_declared(name)) throw(std::runtime_error("can't assign value to underclared variable"));
+	Token t = ts.get();
+	if (t.kind != '=') throw(std::runtime_error("= missing in assignment"));
+	double d = expression();
+	set_value(name, d);
+	return d;
+}
+
+double declaration(bool c)
 {
 	Token t = ts.get();
 	if (t.kind != 'a') throw(std::runtime_error("name expected in declaration"));
@@ -318,8 +318,9 @@ double declaration()
 	if (is_declared(name)) throw(std::runtime_error(" declared twice"));
 	Token t2 = ts.get();
 	if (t2.kind != '=') throw(std::runtime_error("= missing in declaration"));
+	if (name[0] == '_') throw(std::runtime_error("variable name can't begin with underscore"));
 	double d = expression();
-	names.push_back(Variable(name, d));
+	names.push_back(Variable(name, d, c));
 	return d;
 }
 
@@ -328,17 +329,26 @@ double statement()
 	Token t = ts.get();
 	switch (t.kind) 
 	{
+		case ct:
+			return declaration(true); //constant variable declaration
 		case let:
-			return declaration();
+			return declaration(false); //non constant variable declaration
 		default:
-       	    		ts.unget(t);
+			Token t1 = ts.get();
+			if(t1.kind == '=')
+			{
+				ts.unget(t1);
+				return assignment(t.name);
+			}
+			ts.unget(t1);
+			ts.unget(t);
 	    		return expression();
 	}
 }
 
-void define_name(std::string name, double val)
+void define_name(std::string name, double val, bool c)
 {
-	names.push_back(Variable(name, val));
+	names.push_back(Variable(name, val, c));
 }
 
 void clean_up_mess()
@@ -355,8 +365,7 @@ void calculate()
 	while (true) try {
 		std::cout << prompt;
 		Token t = ts.get();
-		while (t.kind == print)
-			t = ts.get();
+		while (t.kind == print)	t = ts.get();
 		if (t.kind == quit) return;
 		ts.unget(t);
 		
@@ -371,12 +380,12 @@ void calculate()
 int main()
 try 
 {
-	define_name("pi", 3.1415926535);
-	define_name("e", 2.7182818284);
-	define_name("k", 1000);
-	
+	define_name("pi", 3.1415926535, 1);
+	define_name("e", 2.7182818284, 1);
+	define_name("k", 1000, 1);
+
 	std::cout << "-CALCULATOR-\nEnter an arithmetic expression and end it by ; to see the result. Available operands:\n"
-		  << "+, -, *, /, %, sqrt(a), pow(a,b).\nYou can now add variables, declare them using \"let\" (e.g. let v1 = 10;) and give them new values.\n";
+		  << "+, -, *, /, sqrt(a), pow(a,b).\nYou can now add variables, declare them using \"let\" (e.g. let v1 = 10;) and give them new values.\n";
 	calculate();
 	return 0;
 }

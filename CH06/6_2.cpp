@@ -1,33 +1,13 @@
 /*
 ---
-UNIT 6 DRILL
-[1] Starting from the file calculator08buggy.cpp, get the calculator to compile.
-[2] Go through the entire program and add appropriate comments.
-[3] As you commented, you found errors (deviously inserted especially for
-you to find). Fix them; they are not in the text of the book.
-[4] Testing: prepare a set of inputs and use them to test the calculator. Is
-your list pretty complete? What should you look for? Include negative values, 0, very small, very large, and silly inputs.
-[5] Do the testing and fix any bugs that you missed when you commented.
-[6] Add a predefined name k meaning 1000.
-[7] Give the user a square root function sqrt(), for example, sqrt(2+6.7).
-Naturally, the value of sqrt(x) is the square root of x; for example, sqrt(9)
-is 3. Use the standard-library sqrt() function to implement that calculator
-sqrt(). Remember to update the comments, including the grammar.
-[8] Catch attempts to take the square root of a negative number and print an
-appropriate error message.
-[9] Allow the user to use pow(x,i) to mean Multiply x with itself i times; for
-example, pow(2.5,3) is 2.5*2.5*2.5. Require i to be an integer using the
-technique we used for % (§6.5).
-[10] Change the declaration keyword from let to #.
-[11] Change the quit keyword from quit to exit. That will involve defining a
-string for quit just as we did for let in §6.8.2.
+E6.2
+[2] Provide an assignment operator, =, so that you can change the value of a
+variable after you have introduced it using let. Discuss why that can be
+useful and how it can be a source of problems.
 ---
 
-
-calculator08buggy.cpp
-Helpful comments removed.
-We have inserted 3 bugs that the compiler will catch and 3 that it won't.
-
+This can be hard to implement, because now you have to distinguish between two potential uses of variables, assignments and normal uses. To distinguish them you have to somehow look ahead to see if the variable name is followed by an "=" sign.
+We can make it easier if we add a keyword at the begining of an assignment such as "make a = 10", but if we want to make assignments behave like in other programming languages "a = 10" we have to change the Token buffer so it can hold more than one token, which increases program complexity a bit.
 
 -GRAMMAR-
 Calculation:
@@ -40,8 +20,11 @@ Print:
 Quit:
 	"q"
 Statement:
+	Assignment
 	Declaration
 	Expression
+Assignment:
+	Name "=" Expression
 Declaration:
 	"let" Name "=" Expression
 Expression:
@@ -52,7 +35,6 @@ Term:
 	Primary
 	Term "*" Primary
 	Term "/" Primary
-	Term "%" Primary
 Primary:
 	Number
 	"sqrt(" Expression ")"
@@ -64,7 +46,7 @@ Number:
 	floating-point-literal
 
 
-15 Nov 2024
+25 Nov 2024
 @jmerort
 */
 
@@ -84,20 +66,19 @@ public:
 	Token(char ch, std::string n) :kind{ch}, name{n} {} //variable constructor
 };
 
-class Token_stream { //to hold the last read token
+class Token_stream { //to hold the last read tokens
 	bool full;
-	Token buffer;
+	std::vector <Token> buffer; //vector that cand hold many tokens
 public:
 	Token_stream() :full(0), buffer(0) { }
 
 	Token get();
-	void unget(Token t) { buffer = t; full = true; }
-
+	void unget(Token t) { buffer.push_back(t); full = true; } // put the last read token back in the buffer
 	void ignore(char);
 };
 
 const char let = 'L', //keywords for different actions
-           quit = 'Q',
+	   quit = 'Q',
            print = ';',
            number = '8',
            name = 'a',
@@ -108,8 +89,10 @@ Token Token_stream::get()
 {
 	if (full) //if there already is a token in the buffer, return it
 	{
-        	full = false;
-        	return buffer; 
+		Token last = buffer[buffer.size()-1];
+		buffer.pop_back();
+        	if (buffer.size() == 0) full = false; //if the buffer has been emptied, the get() method will now read more characters from input stream
+        	return last;
 	}
 	char ch;
 	std::cin >> ch;
@@ -147,11 +130,11 @@ Token Token_stream::get()
             	if (ch == '#') //new declaration keyword
 			return Token(let);
 
-		if (isalpha(ch)) //is ch a letter?
+		if (isalpha(ch)) //is ch a letter
             	{
 			std::string s;
                 	s = ch;
-                	while (std::cin.get(ch) && (isalpha(ch) || isdigit(ch))) s += ch;
+                	while (std::cin.get(ch) && ((isalpha(ch) || isdigit(ch) || ch == '_'))) s += ch;
 			std::cin.putback(ch);
                 	if (s == "exit")
                     		return Token(quit);
@@ -159,7 +142,7 @@ Token Token_stream::get()
 				return (Token(square_root));
 			if (s == "pow")
 				return (Token(power));
-                	return Token(name, s);
+                	return Token(name, s); //if none of these, it's a variable
             	}
             throw(std::runtime_error("Bad token"));
 	}
@@ -167,7 +150,7 @@ Token Token_stream::get()
 
 void Token_stream::ignore(char c)
 {
-	if (full && c == buffer.kind) {
+	if (full && c == buffer[buffer.size()-1].kind) {
 		full = false;
 		return;
 	}
@@ -310,6 +293,16 @@ double expression()
 	}
 }
 
+double assignment(std::string name)
+{
+	if(!is_declared(name)) throw(std::runtime_error("can't assign value to underclared variable"));
+	Token t = ts.get();
+	if (t.kind != '=') throw(std::runtime_error("= missing in assignment"));
+	double d = expression();
+	set_value(name, d);
+	return d;
+}
+
 double declaration()
 {
 	Token t = ts.get();
@@ -318,6 +311,7 @@ double declaration()
 	if (is_declared(name)) throw(std::runtime_error(" declared twice"));
 	Token t2 = ts.get();
 	if (t2.kind != '=') throw(std::runtime_error("= missing in declaration"));
+	if (name[0] == '_') throw(std::runtime_error("variable name can't begin with underscore"));
 	double d = expression();
 	names.push_back(Variable(name, d));
 	return d;
@@ -331,7 +325,14 @@ double statement()
 		case let:
 			return declaration();
 		default:
-       	    		ts.unget(t);
+			Token t1 = ts.get();
+			if(t1.kind == '=')
+			{
+				ts.unget(t1);
+				return assignment(t.name);
+			}
+			ts.unget(t1);
+			ts.unget(t);
 	    		return expression();
 	}
 }
@@ -355,8 +356,7 @@ void calculate()
 	while (true) try {
 		std::cout << prompt;
 		Token t = ts.get();
-		while (t.kind == print)
-			t = ts.get();
+		while (t.kind == print)	t = ts.get();
 		if (t.kind == quit) return;
 		ts.unget(t);
 		
@@ -374,9 +374,9 @@ try
 	define_name("pi", 3.1415926535);
 	define_name("e", 2.7182818284);
 	define_name("k", 1000);
-	
+
 	std::cout << "-CALCULATOR-\nEnter an arithmetic expression and end it by ; to see the result. Available operands:\n"
-		  << "+, -, *, /, %, sqrt(a), pow(a,b).\nYou can now add variables, declare them using \"let\" (e.g. let v1 = 10;) and give them new values.\n";
+		  << "+, -, *, /, sqrt(a), pow(a,b).\nYou can now add variables, declare them using \"let\" (e.g. let v1 = 10;) and give them new values.\n";
 	calculate();
 	return 0;
 }
