@@ -72,7 +72,15 @@ Number:
 #include <vector>
 #include <math.h>
 
-struct Token {
+
+
+//----------------------------------------------------------------------
+
+
+
+struct Token
+{
+	//Token type to represent the unitary elements that can be input into the calculator.
 	char kind;
 	double value;
 	std::string name; //name used for variables
@@ -84,28 +92,48 @@ public:
 	Token(char ch, std::string n) :kind{ch}, name{n} {} //variable constructor
 };
 
-class Token_stream { //to hold the last read token
+
+
+//----------------------------------------------------------------------
+
+
+
+class Token_stream 
+{
+    //to hold the last read token
 	bool full;
 	Token buffer;
 public:
 	Token_stream() :full(0), buffer(0) { }
 
 	Token get();
-	void unget(Token t) { buffer = t; full = true; }
+	void unget(Token t) { buffer = t; full = true;}
 
 	void ignore(char);
 };
+
+
+
+//----------------------------------------------------------------------
+
+
 
 const char let = 'L', //keywords for different actions
            quit = 'Q',
            print = ';',
            number = '8',
            name = 'a',
-	   square_root = 'S',
-	   power = 'P';
+		   square_root = 'S',
+	       power = 'P';
+	   
+const std::string prompt = "> ",
+				  result = "= ";
+
+
 
 Token Token_stream::get()
 {
+	//get a token, either by emptying the buffer or by reading a new token from the input stream
 	if (full) //if there already is a token in the buffer, return it
 	{
         	full = false;
@@ -123,7 +151,7 @@ Token Token_stream::get()
         case '/':
         case '%':
         case ';':
-	case ',':
+		case ',':
         case '=':
             	return Token(ch);
         case '.': //if the character read is the start of a number, put it back and read the whole number into a double
@@ -147,26 +175,33 @@ Token Token_stream::get()
             	if (ch == '#') //new declaration keyword
 			return Token(let);
 
-		if (isalpha(ch)) //is ch a letter?
-            	{
-			std::string s;
-                	s = ch;
-                	while (std::cin.get(ch) && (isalpha(ch) || isdigit(ch))) s += ch;
-			std::cin.putback(ch);
-                	if (s == "exit")
-                    		return Token(quit);
-			if (s == "sqrt")
-				return (Token(square_root));
-			if (s == "pow")
-				return (Token(power));
-                	return Token(name, s);
-            	}
-            throw(std::runtime_error("Bad token"));
+			if (isalpha(ch)) //is ch a letter
+			{
+				std::string s;
+				s = ch;
+				while (std::cin.get(ch) && ((isalpha(ch) || isdigit(ch) || ch == '_'))) s += ch;
+				std::cin.putback(ch);
+				if (s == "exit")
+					return Token(quit);
+				if (s == "sqrt")
+					return (Token(square_root));
+				if (s == "pow")
+					return (Token(power));
+				return Token(name, s); //if none of these, it's a variable
+			}
+			throw(std::runtime_error("Bad token"));
 	}
 }
 
+
+
+//----------------------------------------------------------------------
+
+
+
 void Token_stream::ignore(char c)
 {
+	//discard all input stream characters until a certain one is reached, used to clean up erroneous expressions
 	if (full && c == buffer.kind) {
 		full = false;
 		return;
@@ -178,6 +213,12 @@ void Token_stream::ignore(char c)
 		if (ch == c) return;
 }
 
+
+
+//----------------------------------------------------------------------
+
+
+
 struct Variable {
 	//class for named variables
 	std::string name;
@@ -185,17 +226,29 @@ struct Variable {
 	Variable(std::string n, double v) :name(n), value(v) { }
 };
 
+
+
+//----------------------------------------------------------------------
+
+
+
 std::vector<Variable> names;
+//vector to hold the named variables
+
+
 
 double get_value(std::string s)
 {
+	//get the value of a named variable from the vector
 	for (int i = 0; i < names.size(); ++i)
 		if (names[i].name == s) return names[i].value;
 	throw(std::runtime_error("get: undefined name "));
 }
 
+
 void set_value(std::string s, double d)
 {
+	//change the value of a named variable from the vector
 	for (int i = 0; i <= names.size(); ++i)
 		if (names[i].name == s) {
 			names[i].value = d;
@@ -204,12 +257,20 @@ void set_value(std::string s, double d)
 	throw(std::runtime_error("set: undefined name "));
 }
 
+
 bool is_declared(std::string s)
 {
+	//check if a named variable is in the vector
 	for (int i = 0; i < names.size(); ++i)
 		if (names[i].name == s) return true;
 	return false;
 }
+
+
+
+//----------------------------------------------------------------------
+
+
 
 int pot(int n, int i)
 {
@@ -221,12 +282,20 @@ int pot(int n, int i)
 	return power;
 }
 
-Token_stream ts;
 
+
+//----------------------------------------------------------------------
+
+
+
+Token_stream ts;
 double expression();
+
+
 
 double primary()
 {
+	//compute a primary and return its value
 	Token t = ts.get();
 	switch (t.kind) {
 	case '(':
@@ -269,8 +338,15 @@ double primary()
 	}
 }
 
+
+
+//----------------------------------------------------------------------
+
+
+
 double term()
 {
+	//compute a term and return its value
 	double left = primary();
 	while (true) {
 		Token t = ts.get();
@@ -291,8 +367,15 @@ double term()
 	}
 }
 
+
+
+//----------------------------------------------------------------------
+
+
+
 double expression()
 {
+	//compute an expression and return its value
 	double left = term();
 	while (true) {
 		Token t = ts.get();
@@ -310,8 +393,15 @@ double expression()
 	}
 }
 
+
+
+//----------------------------------------------------------------------
+
+
+
 double declaration()
 {
+	//compute a declaration and return its value
 	Token t = ts.get();
 	if (t.kind != 'a') throw(std::runtime_error("name expected in declaration"));
 	std::string name = t.name;
@@ -323,31 +413,54 @@ double declaration()
 	return d;
 }
 
+
+
+//----------------------------------------------------------------------
+
+
+
 double statement()
 {
+	//compute a statement and return its value
 	Token t = ts.get();
 	switch (t.kind) 
 	{
 		case let:
 			return declaration();
 		default:
-       	    		ts.unget(t);
-	    		return expression();
+       	    ts.unget(t);
+	    	return expression();
 	}
 }
+
+
+
+//----------------------------------------------------------------------
+
+
 
 void define_name(std::string name, double val)
 {
 	names.push_back(Variable(name, val));
 }
 
+
+
+//----------------------------------------------------------------------
+
+
+
 void clean_up_mess()
 {
+	//throw out all input up to a print character
 	ts.ignore(print);
 }
 
-const std::string prompt = "> ";
-const std::string result = "= ";
+
+
+//----------------------------------------------------------------------
+
+
 
 void calculate()
 {
@@ -368,6 +481,12 @@ void calculate()
 	}
 }
 
+
+
+//----------------------------------------------------------------------
+
+
+
 int main()
 try 
 {
@@ -376,7 +495,7 @@ try
 	define_name("k", 1000);
 	
 	std::cout << "-CALCULATOR-\nEnter an arithmetic expression and end it by ; to see the result. Available operands:\n"
-		  << "+, -, *, /, %, sqrt(a), pow(a,b).\nYou can now add variables, declare them using \"let\" (e.g. let v1 = 10;) and give them new values.\n";
+		  << "+, -, *, /, %, sqrt(a), pow(a,b).\nYou can now add variables, declare them using \"#\" (e.g. # v1 = 10;) and give them new values.\n";
 	calculate();
 	return 0;
 }

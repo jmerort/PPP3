@@ -1,12 +1,10 @@
 /*
 ---
-E6.3
-[3] Provide named constants that you really can’t change the value of. Hint:
-You have to add a member to Variable that distinguishes between
-constants and variables and check for it in set_value(). If you want to let
-the user define constants (rather than just having pi and e defined as
-constants), you’ll have to add a notation to let the user express that, for
-example, const pi = 3.14;.
+E6.4
+[4] The get_value(), set_value(), is_declared(), and define_name() functions all
+operate on the variable var_table. Define a class called Symbol_table witha member var_table of type vector<Variable> and member functions get(),
+set(), is_declared(), and declare(). Rewrite the calculator to use a variable
+of type Symbol_table.
 ---
 
 
@@ -48,7 +46,7 @@ Number:
 	floating-point-literal
 
 
-25 Nov 2024
+27 Nov 2024
 @jmerort
 */
 
@@ -70,7 +68,7 @@ struct Token
 	char kind;
 	double value;
 	std::string name; //name used for variables
-
+	
 public:
 	Token() :kind{'0'}{}
 	Token(char ch) :kind(ch), value(0) { }
@@ -89,7 +87,7 @@ class Token_stream
 	//to hold the last read tokens
 	bool full;
 	std::vector <Token> buffer; //vector that cand hold many tokens
-
+	
 public:
 	Token_stream() :full(0), buffer(0) { }
 	Token get();
@@ -114,6 +112,10 @@ const char let = 'L', //keywords for different actions
 
 const std::string prompt = "> ",
 				  result = "= ";
+				  
+			
+
+//----------------------------------------------------------------------
 
 
 
@@ -176,7 +178,7 @@ Token Token_stream::get()
 			if (s == "pow")
 				return (Token(power));
 			if (s == "const")
-				return (Token(ct)); //constant variable type
+				return (Token(ct));
                 	return Token(name, s); //if none of these, it's a variable
             	}
             throw(std::runtime_error("Bad token"));
@@ -211,7 +213,8 @@ void Token_stream::ignore(char c)
 
 
 
-struct Variable {
+struct Variable 
+{
 	//class for named variables
 	std::string name;
 	double value;
@@ -225,28 +228,48 @@ struct Variable {
 
 
 
-std::vector<Variable> names;
-//vector to hold the named variables
+class Symbol_table 
+{
+	//class to hold the variable vector and its methods
+	private:
+		std::vector <Variable> var_table;
+	public:
+		double get(std::string);
+		void set(std::string, double);
+		bool is_declared(std::string);
+		double declare(bool);
+		void add(std::string, double, bool);
+};
 
 
 
-double get_value(std::string s)
+//----------------------------------------------------------------------
+
+
+
+Symbol_table nombres;
+Token_stream ts;
+double expression();
+
+
+
+double Symbol_table::get(std::string s)
 {
 	//get the value of a named variable from the vector
-	for (int i = 0; i < names.size(); ++i)
-		if (names[i].name == s) return names[i].value;
+	for (int i = 0; i < var_table.size(); ++i)
+		if (var_table[i].name == s) return var_table[i].value;
 	throw(std::runtime_error("get: undefined name "));
 }
 
 
-void set_value(std::string s, double d)
+void Symbol_table::set(std::string s, double d)
 {
 	//change the value of a named variable from the vector
-	for (int i = 0; i <= names.size(); ++i)
+	for (int i = 0; i <= var_table.size(); ++i)
 	{
-		if (names[i].name == s) {
-			if(names[i].ct) throw(std::runtime_error("can't change value of a constant."));
-			names[i].value = d;
+		if (var_table[i].name == s) {
+			if(var_table[i].ct) throw(std::runtime_error("can't change value of a constant."));
+			var_table[i].value = d;
 			return;
 		}
 	}
@@ -254,12 +277,35 @@ void set_value(std::string s, double d)
 }
 
 
-bool is_declared(std::string s)
+bool Symbol_table::is_declared(std::string s)
 {
 	//check if a named variable is in the vector
-	for (int i = 0; i < names.size(); ++i)
-		if (names[i].name == s) return true;
+	for (int i = 0; i < var_table.size(); ++i)
+		if (var_table[i].name == s) return true;
 	return false;
+}
+
+
+double Symbol_table::declare(bool c)
+{
+	//compute a declaration: put a variable in a Variable vector and return its value
+	Token t = ts.get();
+	if (t.kind != 'a') throw(std::runtime_error("name expected in declaration"));
+	std::string name = t.name;
+	if (is_declared(name)) throw(std::runtime_error(" declared twice"));
+	Token t2 = ts.get();
+	if (t2.kind != '=') throw(std::runtime_error("= missing in declaration"));
+	if (name[0] == '_') throw(std::runtime_error("variable name can't begin with underscore"));
+	double d = expression();
+	add(name, d, c);
+	return d;
+}
+
+
+void Symbol_table::add(std::string name, double d, bool c)
+{
+	//add a new variable to the vector directly
+	var_table.push_back(Variable(name, d, c));
 }
 
 
@@ -281,11 +327,6 @@ int pot(int n, int i)
 
 
 //----------------------------------------------------------------------
-
-
-
-Token_stream ts;
-double expression();
 
 
 
@@ -314,13 +355,17 @@ double primary()
 		t = ts.get();
 		if(t.kind != '(') throw(std::runtime_error("Power syntax error (should be \"pow(a,b)\")"));
 		t = ts.get();
-		if(t.kind != number) throw(std::runtime_error("Power syntax error (should be \"pow(a,b)\")"));
-		int d = t.value;
+		int d;
+		if(t.kind == name) d = nombres.get(t.name);
+		else if(t.kind == number) d = t.value;
+		else throw(std::runtime_error("Power syntax error (should be \"pow(a,b)\")"));
 		t = ts.get();
 		if (t.kind != ',') throw(std::runtime_error("Power syntax error (should be \"pow(a,b)\")"));
 		t = ts.get();
-		if (t.kind != number) throw(std::runtime_error("Power syntax error (should be \"pow(a,b)\")"));
-		int i = t.value;
+		int i;
+		if(t.kind == name) i = nombres.get(t.name);
+		else if(t.kind == number) i = t.value;
+		else throw(std::runtime_error("Power syntax error (should be \"pow(a,b)\")"));
 		t = ts.get();
 		if (t.kind != ')') throw(std::runtime_error("Power syntax error (should be \"pow(a,b)\")"));
 	       	return pot(d,i);
@@ -328,7 +373,7 @@ double primary()
 	case number:
 		return t.value;
 	case name:
-		return get_value(t.name);
+		return nombres.get(t.name);
 	default:
 		throw(std::runtime_error("primary expected"));
 	}
@@ -351,10 +396,11 @@ double term()
 			left *= primary();
 			break;
 		case '/':
-		{	double d = primary();
-		if (d == 0) throw(std::runtime_error("divide by zero"));
-		left /= d;
-		break;
+		{	
+			double d = primary();
+			if (d == 0) throw(std::runtime_error("divide by zero"));
+			left /= d;
+			break;
 		}
 		default:
 			ts.unget(t);
@@ -397,33 +443,12 @@ double expression()
 
 double assignment(std::string name)
 {
-	//compute an assignment, change a variable's value and return it
-	if(!is_declared(name)) throw(std::runtime_error("can't assign value to underclared variable"));
+	//compute an assignment, give a variable a value and return it
+	if(!nombres.is_declared(name)) throw(std::runtime_error("can't assign value to underclared variable"));
 	Token t = ts.get();
 	if (t.kind != '=') throw(std::runtime_error("= missing in assignment"));
 	double d = expression();
-	set_value(name, d);
-	return d;
-}
-
-
-
-//----------------------------------------------------------------------
-
-
-
-double declaration(bool c)
-{
-	//compute a declaration: create a variable and return its value
-	Token t = ts.get();
-	if (t.kind != 'a') throw(std::runtime_error("name expected in declaration"));
-	std::string name = t.name;
-	if (is_declared(name)) throw(std::runtime_error(" declared twice"));
-	Token t2 = ts.get();
-	if (t2.kind != '=') throw(std::runtime_error("= missing in declaration"));
-	if (name[0] == '_') throw(std::runtime_error("variable name can't begin with underscore"));
-	double d = expression();
-	names.push_back(Variable(name, d, c));
+	nombres.set(name, d);
 	return d;
 }
 
@@ -440,9 +465,9 @@ double statement()
 	switch (t.kind) 
 	{
 		case ct:
-			return declaration(true); //constant variable declaration
+			return nombres.declare(true); //constant variable declaration
 		case let:
-			return declaration(false); //non constant variable declaration
+			return nombres.declare(false); //non constant variable declaration
 		default:
 			Token t1 = ts.get();
 			if(t1.kind == '=')
@@ -454,18 +479,6 @@ double statement()
 			ts.unget(t);
 	    		return expression();
 	}
-}
-
-
-
-//----------------------------------------------------------------------
-
-
-
-void define_name(std::string name, double val, bool c)
-{
-	//used to create variables directly from the code
-	names.push_back(Variable(name, val, c));
 }
 
 
@@ -513,27 +526,19 @@ void calculate()
 int main()
 try 
 {
-	define_name("pi", 3.1415926535, 1);
-	define_name("e", 2.7182818284, 1);
-	define_name("k", 1000, 1);
+	nombres.add("pi", 3.1415926535, 1);
+	nombres.add("e", 2.7182818284, 1);
+	nombres.add("k", 1000, 1);
 
 	std::cout << "-CALCULATOR-\nEnter an arithmetic expression and end it by ; to see the result. Available operands:\n"
-		  << "+, -, *, /, sqrt(a), pow(a,b).\nYou can now add variables, declare them using \"#\" (e.g. # v1 = 10;) and give them new values.\n";
+		  << "+, -, *, /, sqrt(a), pow(a,b).\nYou can now add variables, declare them using \"#\" (e.g. # v1 = 10;) and give them new values.\nYou can also add constants (e.g.: const diez = 10)\n"
+		  << "Enter \"exit\" to exit the calculator.\n";
 	calculate();
 	return 0;
 }
 
 catch (std::exception& e) 
 {
-	std::cerr << "exception: " << e.what() << std::endl;
-	char c;
-	while (std::cin >> c && c != ';');
+	std::cerr << "Error: " << e.what() << "\n";
 	return 1;
-}
-catch (...) 
-{
-	std::cerr << "exception\n";
-	char c;
-	while (std::cin >> c && c != ';');
-	return 2;
 }

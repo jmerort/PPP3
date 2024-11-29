@@ -50,11 +50,21 @@ Number:
 @jmerort
 */
 
+
+
 #include <iostream>
 #include <vector>
 #include <math.h>
 
-struct Token {
+
+
+//----------------------------------------------------------------------
+
+
+
+struct Token 
+{
+	//Token type to represent the unitary elements that can be input into the calculator.
 	char kind;
 	double value;
 	std::string name; //name used for variables
@@ -66,7 +76,15 @@ public:
 	Token(char ch, std::string n) :kind{ch}, name{n} {} //variable constructor
 };
 
-class Token_stream { //to hold the last read tokens
+
+
+//----------------------------------------------------------------------
+
+
+
+class Token_stream 
+{
+	//to hold the last read tokens
 	bool full;
 	std::vector <Token> buffer; //vector that cand hold many tokens
 public:
@@ -77,16 +95,27 @@ public:
 	void ignore(char);
 };
 
+
+
+//----------------------------------------------------------------------
+
+
 const char let = 'L', //keywords for different actions
-	   quit = 'Q',
+           quit = 'Q',
            print = ';',
            number = '8',
            name = 'a',
-	   square_root = 'S',
-	   power = 'P';
+		   square_root = 'S',
+	       power = 'P';
+
+const std::string prompt = "> ",
+				  result = "= ";
+
+
 
 Token Token_stream::get()
 {
+	//get a token, either by emptying the buffer or by reading a new token from the input stream
 	if (full) //if there already is a token in the buffer, return it
 	{
 		Token last = buffer[buffer.size()-1];
@@ -148,8 +177,15 @@ Token Token_stream::get()
 	}
 }
 
+
+
+//----------------------------------------------------------------------
+
+
+
 void Token_stream::ignore(char c)
 {
+	//discard all input stream characters until a certain one is reached, used to clean up erroneous expressions
 	if (full && c == buffer[buffer.size()-1].kind) {
 		full = false;
 		return;
@@ -161,6 +197,12 @@ void Token_stream::ignore(char c)
 		if (ch == c) return;
 }
 
+
+
+//----------------------------------------------------------------------
+
+
+
 struct Variable {
 	//class for named variables
 	std::string name;
@@ -168,17 +210,29 @@ struct Variable {
 	Variable(std::string n, double v) :name(n), value(v) { }
 };
 
+
+
+//----------------------------------------------------------------------
+
+
+
 std::vector<Variable> names;
+//vector to hold the named variables
+
+
 
 double get_value(std::string s)
 {
+	//get the value of a named variable from the vector
 	for (int i = 0; i < names.size(); ++i)
 		if (names[i].name == s) return names[i].value;
 	throw(std::runtime_error("get: undefined name "));
 }
 
+
 void set_value(std::string s, double d)
 {
+	//change the value of a named variable from the vector
 	for (int i = 0; i <= names.size(); ++i)
 		if (names[i].name == s) {
 			names[i].value = d;
@@ -187,12 +241,20 @@ void set_value(std::string s, double d)
 	throw(std::runtime_error("set: undefined name "));
 }
 
+
 bool is_declared(std::string s)
 {
+	//check if a named variable is in the vector
 	for (int i = 0; i < names.size(); ++i)
 		if (names[i].name == s) return true;
 	return false;
 }
+
+
+
+//----------------------------------------------------------------------
+
+
 
 int pot(int n, int i)
 {
@@ -204,12 +266,20 @@ int pot(int n, int i)
 	return power;
 }
 
-Token_stream ts;
 
+
+//----------------------------------------------------------------------
+
+
+
+Token_stream ts;
 double expression();
+
+
 
 double primary()
 {
+	//compute a primary and return its value
 	Token t = ts.get();
 	switch (t.kind) {
 	case '(':
@@ -252,8 +322,15 @@ double primary()
 	}
 }
 
+
+
+//----------------------------------------------------------------------
+
+
+
 double term()
 {
+	//compute a term and return its value
 	double left = primary();
 	while (true) {
 		Token t = ts.get();
@@ -274,8 +351,15 @@ double term()
 	}
 }
 
+
+
+//----------------------------------------------------------------------
+
+
+
 double expression()
 {
+	//compute an expression and return its value
 	double left = term();
 	while (true) {
 		Token t = ts.get();
@@ -293,8 +377,15 @@ double expression()
 	}
 }
 
+
+
+//----------------------------------------------------------------------
+
+
+
 double assignment(std::string name)
 {
+	//compute an assignment, change a variable's value and return it
 	if(!is_declared(name)) throw(std::runtime_error("can't assign value to underclared variable"));
 	Token t = ts.get();
 	if (t.kind != '=') throw(std::runtime_error("= missing in assignment"));
@@ -303,8 +394,15 @@ double assignment(std::string name)
 	return d;
 }
 
+
+
+//----------------------------------------------------------------------
+
+
+
 double declaration()
 {
+	//compute a declaration: create a variable and return its value
 	Token t = ts.get();
 	if (t.kind != 'a') throw(std::runtime_error("name expected in declaration"));
 	std::string name = t.name;
@@ -317,8 +415,15 @@ double declaration()
 	return d;
 }
 
+
+
+//----------------------------------------------------------------------
+
+
+
 double statement()
 {
+	//compute a statement and return its value
 	Token t = ts.get();
 	switch (t.kind) 
 	{
@@ -337,18 +442,35 @@ double statement()
 	}
 }
 
+
+
+//----------------------------------------------------------------------
+
+
+
 void define_name(std::string name, double val)
 {
+	//used to create variables directly from the code
 	names.push_back(Variable(name, val));
 }
 
+
+
+//----------------------------------------------------------------------
+
+
+
 void clean_up_mess()
 {
+	//throw out all input up to a print character
 	ts.ignore(print);
 }
 
-const std::string prompt = "> ";
-const std::string result = "= ";
+
+
+//----------------------------------------------------------------------
+
+
 
 void calculate()
 {
@@ -368,6 +490,12 @@ void calculate()
 	}
 }
 
+
+
+//----------------------------------------------------------------------
+
+
+
 int main()
 try 
 {
@@ -376,7 +504,7 @@ try
 	define_name("k", 1000);
 
 	std::cout << "-CALCULATOR-\nEnter an arithmetic expression and end it by ; to see the result. Available operands:\n"
-		  << "+, -, *, /, sqrt(a), pow(a,b).\nYou can now add variables, declare them using \"let\" (e.g. let v1 = 10;) and give them new values.\n";
+		  << "+, -, *, /, sqrt(a), pow(a,b).\nYou can now add variables, declare them using \"#\" (e.g. # v1 = 10;) and give them new values.\n";
 	calculate();
 	return 0;
 }
