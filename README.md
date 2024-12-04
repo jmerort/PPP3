@@ -11,4 +11,5 @@ I'm not a professional programmer, and my education is as an electronic engineer
 
 I prefer not to use the PPP3.h file or any other specific files, so I import the necessary libraries. I also do not use namespace std, as I always read people warning against it. This also means i don't use the error() function, throwing instead runtime_error and catching it accordingly.
 
-[![HitCount](https://hits.dwyl.com/jmerort/PPP3.svg?style=flat-square&show=unique)](http://hits.dwyl.com/jmerort/PPP3)
+  [![HitCount](https://hits.dwyl.com/jmerort/PPP3.svg?style=flat-square)](http://hits.dwyl.com/jmerort/PPP3)
+
