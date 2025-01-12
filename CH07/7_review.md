@@ -86,21 +86,7 @@ A namespace can contain classes as well as non class functions and data.
 
 **[25] What is a using declaration?**
 A declaration of a namespace, or part of it. When you include it, the linker knows which functions you are refering to, even if you don't use their full prefixes. E.g.: if you include in your program
-```
-using namespace std;
-```
-or 
-```
-using std::cout;
-```
-you can write
-```
-cout << "...";
-```
-instead of having to write
-```
-std::cout << "...";
-```
+`using namespace std;` or `using std::cout;` you can write `cout << "...";` instead of having to write `std::cout << "...";`
 
 **[26] Why should you avoid using directives in a header?**
 Because the person importing the header will then enter new names into the program they might not be aware of, which can cause name clashes.
