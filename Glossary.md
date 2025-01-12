@@ -1,29 +1,41 @@
-Here are my definitions of the important C++ terms that appear at the ned of each chapter.
-# //
+Here are my definitions of the important C++ terms that appear at the end of each chapter.
+# `//`
 Indicates a comment from the sign to the end of the line.
 
-# <<
+# `<<`
 Output operator. It is used with output streams to print data on screen or store it in a file. 
 
 # Abstraction
 The act of leaving out of a model (mathematico-physical, economic, mental etc.) the elements deemed unnecessary for a particular goal, leaving only the essentials. In programming, it involves hiding the implementation details of a particular application, giving the user instead a simple interface through which they can use it.
 
+# Activation record
+Data structure containing a copy of all the parameters and local variables of a function.
+
+# Argument
+Variable that is passed to a function when it is called. They serve as the inputs of a function.
+
 # Argument error
 Error that appears when a function is called using a different set of arguments from those for which it has been defined. Found by the compiler.
 
+# Argument passing
+Passing [arguments](Glossary.md#Argument) to functions.
+
 # Asesrtion
-Statement that affirms an [Invariant](Glossary.md#Invariant).
+Statement that affirms an [invariant](Glossary.md#Invariant).
 
 # Assignment
 Giving a value to an already created variable, removing the previous one.
 
-# begin()
+# `begin()`
 Method of the std::vector class which returns its first element.
 
 # C++
 Object-oriented programming language developed by Bjarne Stroustrup. More complex than most, it offers a very good performance and is widely used in many areas.
 
-# catch
+# Call stack
+Data structure that holds the activation records of the functions that have been called and have not yet returned. As functions are called it grows and as functions return it shrinks, according to the rule "last in, first out".
+
+# `catch`
 Structure indicating the code that is to be executed if a particular type of error is thrown by the try{} section.
 ```
 try
@@ -36,8 +48,11 @@ catch(error)
 }
 ```
 
-# cin
+# `cin`
 Character input stream. Used to give inputs to a program through the keyboard.
+
+# Class scope
+Scope containing the objects and functions that are members of a class. The `public:` elements can be accessed by any part of the program, while the `private:` ones are only accessible to class members. Class elements in C++ are private by default.
 
 # Code layout
 Distribution of code on the screen. This has to do with how the code is displayed visually and not with its logical structure, therefore, it depends on a proper use of spaces and comments. A program with a good layout will be more easily read and less susceptible to human errors.
@@ -60,7 +75,7 @@ Part of a program which is ignored by the compiler and is written so that future
 Writing comments that help future readers understand and manipulate a piece of code.
 
 # Compiler
-Program tasked with translating other programs from source code to object code. The most popular for C++ is GCC (Gnu Compiler Collection), and is called by invoking "g++" in the command line. 
+Program tasked with translating other programs from source code to object code. The most popular for C++ is GCC (Gnu Compiler Collection), and is called by writing `g++` in the command line. 
 
 # Compile time error
 Error caught by the compiler. They can be syntax or type errors.
@@ -77,6 +92,9 @@ Putting one value immediately after another to create a new one. Can be done wit
 # Conditional statement
 Statement that alters the flow of execution of a program based on a given logical condition.
 
+# `const`
+Variable qualifier that makes the compiler forbid the program from changing the value of that variable.
+
 # Container
 Structure that can hold many objects. In C++ the most popular container is [vector](Glossary.md#vector).
 
@@ -86,8 +104,8 @@ Change of an object's type. There are safe conversion (those whose final type ca
 int a = 2.5 / 1 //conversion of double 1.25 to int 1
 ``` 
 
-# cout
-Character output stream. Used in conjunction with [<<](Glossary.md#<<)
+# `cout`
+Character output stream. Used in conjunction with [`<<`](Glossary.md#<<)
 
 # Debugging
 Process of finding and fixing software errors (or bugs) in a program. It is rather tedious, so our code should be structured in such a way as to minimize the time spent on it.
@@ -99,7 +117,7 @@ Statement that gives name to an object or function.
 Decrease of the value of a variable (often of 1 unit.)
 
 # Definition
-Declaration that saves memory for a given object. When talking about funcions, it refers to the code which contains its name, inputs and body. 
+Declaration that saves memory for a given object.
 
 # Divide and conquer
 Methodology which consists of divinding big problems into many smaller solutions. In programming, this means making programs out of many interconnected programs and functions.
@@ -107,14 +125,14 @@ Methodology which consists of divinding big problems into many smaller solutions
 # Executable
 Final form of a program, once it has been compiled and linked. It can be executed by a computer. 
 
-# else
+# `else`
 indicates the statement to be executed if the condition of a preceeding if is false.
 ```
 if(cond){...} else{...}
 ```
 
-# end()
-Method of std::vector that returns its last element.
+# `end()`
+Method of `std::vector` that returns its last element.
 ```
 v1.end();
 ```
@@ -130,7 +148,7 @@ To reduce the amount of errors on our programs, we can follow these steps:
 Actions that our program should take once an error has been caught. Not to be confused with [debugging](#Debugging).
 
 # Exception
-C++ mechanism of dealing with errors that separates error detection (to be done in the called function) from error handling (to be done in the called function). It consists of a structure with the functions try(), throw() and catch().
+C++ mechanism of dealing with errors that separates error detection (to be done in the called function) from error handling (to be done in the called function). It consists of a structure with the functions `try()`, `throw()` and `catch()`.
 ```
 try {
     ...
@@ -151,7 +169,7 @@ a + b;  10;  x == y
 # Feature creep
 Adding too many features to a program too early. This often results in programs which take way too long to develop, because we often underestimate how difficult a particular feature will be to implement. It's a good practice to make sure a small scale version of the program works before adding more functions to it.
 
-# for
+# `for`
 Loop statement with all its control information contained in its header. In the first position of it, the control variable is designated (often declared and initialized); in the second, the exit condition, which, when no longer true, makes the loop end; in the third, a statement to be executed every time the loop ends, typically used to modify the value of the control variable.
 ```
 for (int i = 0; i < val; i++){body}
@@ -164,7 +182,13 @@ type indentifier (parameters) {body}
 ```
 Functions should be defined for logically separate operations. 
 
-# Header
+# Function definition
+Line of code which contains the name, inputs and body of a function. 
+
+# Global scope
+Most general scope. Global objects and functions can be used in every part of a program. Elements declared outside of any structure in the program belong to the global scope.
+
+# Header file
 File containing the definitions of objects and functions to be used in another program. They are .h files.
 
 # IDE
@@ -176,7 +200,7 @@ Conditional statement whose body (the statement after it, which can be many stat
 if(cond){...}
 ```
 
-# \#include
+# `#include`
 Statement that tells the linker to include (link) a file, whose functions and objects can then be used. 
 
 # Increment
@@ -243,7 +267,7 @@ weight(double m)
 }
 ```
 
-# main()
+# `main()`
 Function run at the start of any program. Every C++ program must have it. Typically ended by a `return 0` statement to indicate succesful termination.
 
 # Maintenance
@@ -288,6 +312,12 @@ Symbol used to indicate certain operations. Its meaning depends on the type of o
 # Output
 Data that a program or part of it sends (to another program, to a screen, a file etc.). 
 
+# Pass-by-reference
+Way of passing arguments to functions in which the function recieves a pointer to a variable and accesses the variable itself.
+
+# Pass-by-value
+Way of passing arguments to functions in which the function creates a (local) copy of the argument variable.
+
 # Post-condition
 Check done before a function returns its output to check if it is of the required type before returning it.
 
@@ -309,8 +339,8 @@ sum_integers (int a, int b)
 # Program
 Set of intstructions susceptible of being run by a digital computer.
 
-# push_back()
-Member function of the std::vector class that pushes an element to the back of the vector, increasing its size by 1.
+# `push_back()`
+Member function of the `std::vector` class that pushes an element to the back of the vector, increasing its size by 1.
 ```
 std::vector <int> v1 {1, 2}
 v1.push_back(3); //v1 is now {1, 2, 3}
@@ -326,11 +356,17 @@ std::cout v1[v1.range()] // range error, the last element is
 # Recovery
 Process of keeping a program running as good as it can once an error has occurred. It means handling the errors and keeping the information that can be kept.
 
+# Recursion
+When an element, usually a function, can call itself.
+
 # Repetition
 Running a section of code many times. Similar to [iteración](Glossary.md#Iteración).
 
 # Requisite
 Condition. See [pre-condition](Glossary.md#Pre-condition) and [post-condition](Glossary.md#Post-condition).
+
+# Return value
+Value that a function returns to its caller once its execution has ended.
 
 # Revision history
 Comment showing who has written and edited a certain program and when each revision has occurred.
@@ -361,12 +397,12 @@ int main()
 ```
 
 # Selection
-Decision structure where one of a number of sections of code can be executed according to the value of a given variable. Similar to if. In C++ it is implemented using [switch](Glossary.md#switch) structures.
+Decision structure where one of a number of sections of code can be executed according to the value of a given variable. Similar to if. In C++ it is implemented using [`switch`](Glossary.md#switch) structures.
 
-# size()
-Member function of std::vector which returns its size, or number of elements.
+# `size()`
+Member function of `std::vector` which returns its size, or number of elements.
 
-# sort()
+# `sort()`
 Standard library function to sort alphanumerically the elements of a vector, or a part of them. Requires `<algorithm>`.
 ```
 #include <algorithm>
@@ -379,7 +415,7 @@ Code written on a programming language, not yet compiled.
 # Statement
 Expression ended by a semicolon. It's the building block of programs.
 
-# switch
+# `switch`
 C++ selection structure which compares the value of a variable against a set of constants and executes the code of the constants to which it equals. Don't forget the break statements!
 ```
 switch(var)
@@ -411,8 +447,8 @@ int a = 10
 # Testing
 Entering inputs into a program to check if it works how it should. For professional software, this should be done systematically and with a large amount of inputs, for which testing programs are used. Testing and [debugging](Glossary.md#Debugging) are the two techniques used to solve programming errors. 
 
-# Throw 
-Function that can throw errors when called inside the body of a [try()](Glossary.md#Exception).
+# `throw` 
+Function that can throw errors when called inside the body of a [`try()`](Glossary.md#Exception).
 
 # Type
 Data type of a given [object](#Object). It determines how the information it contains is interpreted by the computer, as well as the operations that you can do to it. 
@@ -433,10 +469,10 @@ Information that an [object](#Object) contains.
 # Variable
 Named object.
 
-# Vector 
+# `vector` 
 C++ standard library class used to create and manipulate single type containers. Requires `#include <vector>` 
 
-# While
+# `while`
 C++ loop structure whose body is ran while the condition of its heading, which is checked every time the loop starts, is true. It is important to have an exit condition in some form or another, or else you can end with an infinite loop. 
 ```
 while(cond)
