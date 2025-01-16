@@ -8,7 +8,6 @@ week 1 is the week with January 1 in it and that the first day of a week is
 a Sunday).
 ---
 
-[I think this works, just clean it up a little bit.]
 
 Jan 2025
 @jmerort
@@ -367,7 +366,7 @@ int main()
 	}
 	catch(std::exception& e)
 	{
-		std::cerr << "Error: " << e.what() << '\n';
+		std::cerr << e.what() << '\n';
 		return 1;
 	}
 	catch(Date::Invalid)
