@@ -12,6 +12,8 @@ I'm not a professional programmer, and my education is as an engineer, so these 
 
 I prefer not to use the `PPP3.h` file or any other specific files, so I import the necessary libraries. I also do not use namespace std, as I always read people warning against it. This also means i don't use the `error()` function, throwing instead `runtime_error` and catching it accordingly.
 
+Modules seem to be beyond by (current?) understanding, so I'll just use headers for now.
+
 
 ## How to compile and run the files
 
