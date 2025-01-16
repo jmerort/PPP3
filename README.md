@@ -7,6 +7,31 @@ I will try to do most if not all of the excercises, drills and "try this" sectio
 
 I'm not a professional programmer, and my education is as an electronic engineer, so these are not expert solutions or anything of the sort, though I hope they will get better as I continue to write.
 
+
 ## About my programs
 
 I prefer not to use the PPP3.h file or any other specific files, so I import the necessary libraries. I also do not use namespace std, as I always read people warning against it. This also means i don't use the error() function, throwing instead runtime_error and catching it accordingly.
+
+
+## How to compile and run the files
+
+I use gcc version 12.2.0 (Debian 12.2.0-14) as a compiler for these files, and compile them with this command:
+```
+g++ -o run file.cpp -Wall -Wextra -g -std=c++20
+```
+
+If there is more than one file in the program I use the following commands:
+- To compile the source files:
+```
+g++ -c main_file.cpp [additional_files.cpp] -Wall -Wextra -g -std=c++20
+```
+- To create the executable from the object files:
+```
+g++ -o run main_file.o [additional_files.o] -std=c++20
+```
+
+I try to make each excercise as self-contained as reasonable; therefore, if there are many files per program, I create a folder and put them all there, next to the "main file".
+
+
+## Licensing
+These are very simple educational programs, not meant for commercial or otherwise professional use. If anybody wishes to use them or parts of them in their programs, they are free to do so, as the MIT license says.
