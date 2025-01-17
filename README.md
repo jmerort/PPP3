@@ -36,4 +36,4 @@ I try to make each excercise as self-contained as reasonable; therefore, if ther
 
 
 ## Licensing
-These are very simple educational programs, not meant for commercial or otherwise professional use. If anybody wishes to use them or parts of them in their programs, they are free to do so, as the MIT license says.
+These are very simple educational programs, not meant for commercial or otherwise professional use. If anybody wishes to use them or parts of them in their programs, they are free to do so in accordance with the MIT license.

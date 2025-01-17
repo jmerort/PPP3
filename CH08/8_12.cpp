@@ -9,13 +9,10 @@ range we can represent that way (feel free to reject days before day 0,
 i.e., no negative days).
 ---
 
-member functions to implement:
-- add_day(int)
-- Date(int, int, int)
-- << operator
-- i dont find any more in 8.4.2...
 
-UNFINISHED
+To implement Date in this way, the difficulty lies in transforming a long int into a 
+number of years, months, and days, given that all months don't have the same number
+of days (even ignoring leap-years).
 
 Jan 2025
 @jmerort
@@ -25,7 +22,8 @@ Jan 2025
 #include <iostream>
 #include <vector>
 
-using std::cout;
+using std::cout,
+      std::vector;
 
 
 //----------------------------------------------------------------------
@@ -35,70 +33,95 @@ using std::cout;
 class Date 
 {
     public:
-        Date():d{0}{};
+        Date():days{0}{};
         Date(int y, int m, int d);
 
         int year(), //return year number
             month(), //return month number
             day(); //return day number
 
-        void add_day(int dd) {d += dd;};
+        void add_day(int dd) {days += dd;};
 
         friend std::ostream& operator << (std::ostream&, Date);
 
         struct Invalid {};
 
     private:
-        long int d;
+        long int days;
+
+        const vector <int> days_each_month {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+        const int days_each_year {365},
+                  year_zero {1970};
 
         bool is_valid();
 };
 
 
 
-Date::Date (int yy, int mm, int dd)
+Date::Date (int y, int m, int d)
 {
-    d = (yy - 1970) * 365 + mm * 12 + dd;
+    if (y < year_zero) throw Invalid {};
+
+    long int year_days {0}; //days in x years
+    int month_days {0}; //days in x months
+    int day_days {d}; //days in x days
+
+    year_days = (y - year_zero) * days_each_year; //get days of past years to sum (ignoring leap-years)
+
+    for (int i {1}; i < m; i++) //get days of past months to sum
+        month_days += days_each_month [i-1];
+
+    days = year_days + month_days + day_days;
 }
 
 
 
-bool Date::is_valid()
-//check for invalid dates
-{
-    return d < 0;
+int Date::year()
+//return number or years since day 0 (1 jan 1970)
+{ 
+    return (days - days % days_each_year) / days_each_year; //get only integer part of division
 }
 
 
 
-int year()
+int Date::month()
+//return  month number
 {
+    int d {days},
+        m {1}; //month number
 
+    d = days - year() * days_each_year;
+
+    while (d > days_each_month[m-1])
+    {
+        d -= days_each_month[m-1];
+        m++;
+    }
+
+    return m;
 }
 
 
 
-int month()
+int Date::day()
 {
+    vector <int> month_days {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+    int d {days},
+        m {month()};
 
-}
+    d -= year() * days_each_year;
 
+    for (int i {1}; i < m; i++)
+        d -= month_days[i-1];
 
-
-int day()
-{
-    
+    return d;
 }
 
 
 
 std::ostream& operator << (std::ostream& os, Date dt)
 {
-    int yy year();
-    int mm month();
-    int dd day();
-	os << yy << '-' << mm << '-' << dd;
-
+	os << dt.year() + dt.year_zero << '-' << dt.month() << '-' << dt.day();
 	return os;
 }
 
@@ -111,8 +134,11 @@ int main()
 {
 	try
 	{
-        Date today {2000, 1, 23};
-        cout << today << '\n';
+        Date today {2025, 2, 13};
+
+        cout << "Today is " << today << '\n';
+
+        Date inv {1123, 2, 1}; //try to create invalid date
 
 		return 0;
 	}
