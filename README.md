@@ -1,5 +1,5 @@
 # PPP3
-As I work my way through Bjarne Stroustrup's Programming Principles and Practice using C++ (3rd ed.), I will be uploading here the code I write as I do the excercises and drills. Now that I'm out of college and have more time on my hands, I can devote some of it to programming and, as I've always liked C++, I think now is a good time to improve my skills and learn more about it. I also want to get more comfortable using GitHub, so sharing my code here may help me with that, as well as force me to keep the code somewhat organized and readable.
+As I work my way through Bjarne Stroustrup's Programming Principles and Practice using C++ (3rd ed.), I'll be uploading here the code of the excercises I do. Now that I'm out of college and have more time on my hands, I can devote some of it to programming and, as I've always liked C++, I think now is a good time to improve my skills and learn more about it. I also want to get more comfortable using GitHub, so sharing my code here may help me with that, as well as force me to keep the code somewhat organized and readable.
 
 
 I will try to do most if not all of the excercises, drills and "try this" sections of the book, and I might upload here some notes and definitions, if I happen to write them. How far I go into the book, time will tell.
@@ -10,7 +10,7 @@ I'm not a professional programmer, and my education is as an engineer, so these 
 
 ## About my programs
 
-I prefer not to use the `PPP3.h` file or any other specific files, so I import the necessary libraries. I also do not use namespace std, as I always read people warning against it. This also means i don't use the `error()` function, throwing instead `runtime_error` and catching it accordingly.
+I prefer not to use the `PPP3.h` file or any other specific files, so I import the necessary libraries. I also don't use namespace std, as I always read people warning against it. This also means I don't use the `error()` function, throwing instead `runtime_error` and catching it accordingly.
 
 Modules seem to be beyond by (current?) understanding, so I'll just use headers for now.
 
