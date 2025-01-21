@@ -9,10 +9,8 @@ multiplication, division, and equality operators. Also, provide a
 conversion to double. Why would people want to use a Rational class?
 ---
 
-TO BE DONE:
-- provide assignment
-- to_double
-- explain why one would use this
+The compiler doesn't allow me to declare the operator= function as a friend of
+the class, for some reason.
 
 Jan 2024
 @jmerort
@@ -20,6 +18,8 @@ Jan 2024
 
 
 #include <iostream>
+
+using std::cout;
 
 
 //---------------------------------------------------------------------------
@@ -34,15 +34,19 @@ class Rational
         int num(){return n;};
         int den(){return d;};
 
-		friend Rational operator+ (Rational&, Rational&);
-		friend Rational operator- (Rational&, Rational&);
+		double to_double(); //convert rational to double
+
+		void operator= (Rational&); //assignment operator
+
+		friend Rational operator+ (Rational&, Rational&); //arithmetic operators
+		friend Rational operator- (Rational&, Rational&); 
 		friend Rational operator* (Rational&, Rational&);
 		friend Rational operator/ (Rational&, Rational&);
 
-        friend bool operator== (Rational&, Rational&);
+        friend bool operator== (Rational&, Rational&); //equality operator
 		friend bool operator!= (Rational&, Rational&);
 
-        friend std::ostream& operator << (std::ostream&, Rational);
+        friend std::ostream& operator << (std::ostream&, Rational); //output operator
 
 		struct Invalid {};
 
@@ -74,6 +78,23 @@ void Rational::simplify()
 			i = 1; //start counting again
 		}
 	}
+}
+
+
+
+double Rational::to_double()
+{
+	double nn {n},
+		   dd {d};
+	return nn / dd;
+}
+
+
+
+void Rational::operator=(Rational& a)
+{
+	n = a.n;
+	d = a.d;
 }
 
 
@@ -167,15 +188,22 @@ int main()
 				 c {4,8},
 				 d {8,16};
         
-		if (a == b) std::cout << "a and b are equal\n";
+		//arithmetic
+		cout << "a is " << a << " and b is " << b << '\n';
+		cout << "a + b is " << a + b << '\n';
+		cout << "a - b is " << a - b << '\n';
+		cout << "a * b is " << a * b << '\n';
+		cout << "a / b is " << a / b << '\n';
 
-		std::cout << "a is " << a << " and b is " << b << '\n';
-		std::cout << "a + b is " << a + b << '\n';
-		std::cout << "a - b is " << a - b << '\n';
-		std::cout << "a * b is " << a * b << '\n';
-		std::cout << "a / b is " << a / b << '\n';
+		//equality
+		if (c == d) cout << c << " is equal to " << d << '\n';
 
-		if (c == d) std::cout << c << " is equal to " << d << '\n';
+		//double conversion
+		cout << d << " as a double is " << d.to_double() << '\n';
+
+		//assignment
+		a = b; 
+		cout << "a is now " << b << '\n';
 
 		return 0;
 	}
@@ -187,6 +215,7 @@ int main()
 	catch(Rational::Invalid)
 	{
 		std::cerr << "Denominator can't be zero.\n";
+		return 2;
 	}
 	catch(...)
 	{
