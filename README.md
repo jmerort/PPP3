@@ -32,7 +32,7 @@ g++ -c main_file.cpp [additional_files.cpp] -Wall -Wextra -g -std=c++20
 g++ -o run main_file.o [additional_files.o] -std=c++20
 ```
 
-I try to make each excercise as self-contained as reasonable; therefore, if there are many files per program, I create a folder and put them all there, next to the "main file".
+I try to make each excercise as self-contained as reasonable; therefore, if there are many files per program, I create a folder with the problem number and put them all there, next to the "main file".
 
 
 ## Licensing
